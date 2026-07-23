@@ -12,42 +12,30 @@ namespace Cromos.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private readonly IRepositorio<Cliente> repositorio;
+        private readonly IClienteRepositorio repositorio;
 
-        public ClienteController(ApplicationDbContext context , IRepositorio<Cliente> repositorio)
+        public ClienteController(ApplicationDbContext context , IClienteRepositorio repositorio)
         {
             this.context = context;
             this.repositorio = repositorio;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<ListaClienteDTO>>> ObtenerCliente()
-        {
-            var clientes = await repositorio.SelectLista();
-            if (clientes == null)
-            {
-                return BadRequest("Error al obtener los clientes");
-            }
-            if (clientes.Count == 0)
-            {
-                return NotFound("No se encontraron clientes");
-            }
-            return Ok(clientes);
-        }
         [HttpGet("listaClientes")]
         public async Task<ActionResult<List<ListaClienteDTO>>> ListaClientes()
         {
-            var listaclientes = await repositorio.SelectLista();
-            if (listaclientes == null)
+            var lista = await repositorio.ObtenerListaClientesDTO();
+            if (lista == null)
             {
                 return BadRequest("Error al obtener los clientes");
             }
-            if (listaclientes.Count == 0)
+            if (lista.Count == 0)
             {
                 return NotFound("No se encontraron clientes");
+                Console.WriteLine($"Cantidad de clientes: {lista.Count}");
             }
-            return Ok(listaclientes);
+            return Ok(lista);
         }
+       
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ListaClienteDTO>> ObtenerClientePorId(int id)
@@ -65,11 +53,6 @@ namespace Cromos.Controllers
         {
             try
             {
-                bool existePersona = await context.Personas.AnyAsync(p => p.Email == dto.Email);
-                if (existePersona)
-                {
-                    return BadRequest("Ya existe una persona con el mismo correo electrónico");
-                }
                 var persona = new Persona
                 {
                     Nombre = dto.Nombre,
@@ -77,13 +60,17 @@ namespace Cromos.Controllers
                     Email = dto.Email,
                     Telefono = dto.Telefono
                 };
+                await context.Personas.AddAsync(persona);
+                await context.SaveChangesAsync();
+
                 var cliente = new Cliente
                 {
-                    Persona = persona,
-                    Estado = dto.Estado
+                    PersonaId = persona.Id,
+                    Estado = dto.Estado,
+                    FechaRegistro = DateTime.Now
                 };
                 var idCliente = await repositorio.Insert(cliente);
-                return Ok(new { mensaje = "Cliente creado exitosamente", idCliente });
+                return Ok(idCliente );
             }
             catch (Exception ex)
             {
@@ -101,7 +88,9 @@ namespace Cromos.Controllers
         {
             try
             {
-                var cliente = await context.Clientes.FindAsync(id);
+                var cliente = await context.Clientes
+                    .Include(c => c.Persona)
+                    .FirstOrDefaultAsync(c => c.Id == id);
                 if (cliente == null)
                 {
                     return NotFound("Cliente no encontrado");

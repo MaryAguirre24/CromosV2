@@ -3,6 +3,7 @@ using BD.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
+using Repositorio.Repositorios;
 
 namespace Cromos.Controllers
 {
@@ -11,25 +12,52 @@ namespace Cromos.Controllers
     public class PersonaController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IRepositorio<Persona> repositorio;
 
-        public PersonaController(ApplicationDbContext context)
+        public PersonaController(ApplicationDbContext context , IRepositorio<Persona> repositorio)
         {
             this.context = context;
+            this.repositorio = repositorio;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<VerPersonaDTO>>> ObtenerPersona()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VerPersonaDTO>> ObtenerPersonaPorId(int id)
         {
-            var personas = await context.Personas.ToListAsync();
-            if (personas == null)
+            var persona = await context.Personas.FindAsync(id);
+            if (persona == null)
             {
-                return BadRequest("Error al obtener las personas");
+                return NotFound("Persona no encontrada");
             }
-            if (personas.Count == 0)
-            {
-                return NotFound("No se encontraron personas");
-            }
-            return Ok(personas);
+            return Ok(persona);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> CrearPersona([FromBody] CrearPersonaDTO dto)
+        {
+            try
+            {
+                bool existeemail = await context.Personas.AnyAsync(p => p.Email == dto.Email);
+                if (existeemail)
+                {
+                    return BadRequest("El email ya está registrado");
+                }
+                var persona = new Persona
+                {
+                    Nombre = dto.Nombre,
+                    Apellido = dto.Apellido,
+                    Telefono = dto.Telefono,
+                    Email = dto.Email
+                };
+                var idPersona = await repositorio.Insert(persona);
+                return Ok(idPersona);
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al crear la persona: {ex.Message}");
+            }
+        }
+
     }
 }
