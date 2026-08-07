@@ -40,7 +40,7 @@ namespace Cromos.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ListaClienteDTO>> ObtenerClientePorId(int id)
         {
-            var cliente = await repositorio.SelectById(id);
+            var cliente = await repositorio.ObtenerClientePorId(id);
             if (cliente == null)
             {
                 return NotFound("Cliente no encontrado");
@@ -83,6 +83,17 @@ namespace Cromos.Controllers
             }
 
         }
+        [HttpGet("editar/{id}")]
+        public async Task<ActionResult<EditarClienteDTO>> ObtenerClienteEditar(int id)
+        {
+            var cliente = await repositorio.ObtenerClienteEditar(id);
+
+            if (cliente == null)
+                return NotFound();
+
+            return Ok(cliente);
+        }
+
         [HttpPut("editar/{id}")]
         public async Task<ActionResult> EditarCliente(int id, [FromBody] EditarClienteDTO dto)
         {
@@ -101,9 +112,10 @@ namespace Cromos.Controllers
                 persona.Apellido = dto.Apellido;
                 persona.Email = dto.Email;
                 persona.Telefono = dto.Telefono;
+                cliente.Estado = dto.Estado;
 
                 await context.SaveChangesAsync();
-                return Ok(cliente);
+                return Ok(cliente.Id);
             }
             catch (Exception ex)
             {
