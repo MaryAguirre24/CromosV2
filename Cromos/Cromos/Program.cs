@@ -3,6 +3,7 @@ using BD.Data.Entity;
 using Cromos.Client.Pages;
 using Cromos.Components;
 using Cromos.Components.Account;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,17 @@ using Repositorio.Repositorios;
 using Servicio.ServiciosHttp;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddScoped(sp =>
-    new HttpClient { BaseAddress = new Uri("https://localhost:7026/") });
-builder.Services.AddScoped<IHttpServicio, HttpServicio>();
+{
+    var navigation = sp.GetRequiredService<NavigationManager>();
 
+    return new HttpClient
+    {
+        BaseAddress = new Uri(navigation.BaseUri)
+    };
+});
+
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
 
 builder.Services.AddControllers();
 
