@@ -74,13 +74,13 @@
                                 @if (cliente.Deuda > 0)
                                 {
                                     <span class="deuda-positiva">
-                                        @cliente.Deuda.ToString("C")
+                                        @cliente.Deuda.ToString("C", new System.Globalization.CultureInfo("es-AR"))
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="deuda-cero">
-                                        @cliente.Deuda.ToString("C")
+                                        @cliente.Deuda.ToString("C", new System.Globalization.CultureInfo("es-AR"))
                                     </span>
                                 }
                                 </td>
