@@ -4,9 +4,10 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore Cromos/Cromos.csproj
+RUN dotnet restore Cromos/Cromos/Cromos.csproj
 
-RUN dotnet publish Cromos/Cromos.csproj -c Release -o /app/publish --no-restore
+RUN dotnet publish Cromos/Cromos/Cromos.csproj -c Release -o /app/publish --no-restore
+
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
