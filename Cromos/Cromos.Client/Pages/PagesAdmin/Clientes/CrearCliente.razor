@@ -1,0 +1,186 @@
+﻿@page "/cliente/crear"
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+
+
+<div class="mb-4">
+
+    <h2 class="titulo-seccion">
+        <i class="bi bi-person-plus-fill me-2"></i>
+        Agregar Cliente
+    </h2>
+
+    <p class="subtitulo-seccion">
+        Completá los datos para agregar un nuevo cliente.
+    </p>
+
+</div>
+<br />
+<article class="container-custom">
+
+    <div class="card-custom">
+
+        <EditForm Model="cliente"
+                  OnValidSubmit="Grabar"
+                  FormName="CrearCliente">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-danger">
+                    @Mensaje
+                </div>
+            }
+
+            <h3 class="mb-4 titulo-formulario">
+                <i class="bi bi-card-checklist me-2"></i>
+                Datos del Cliente
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">
+                        Nombre
+                    </label>
+
+                    <InputText class="form-control form-custom"
+                               @bind-Value="cliente.Nombre"
+                               placeholder="Ingrese el nombre" />
+
+                    <ValidationMessage For="@(() => cliente.Nombre)" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">
+                        Apellido
+                    </label>
+
+                    <InputText class="form-control form-custom"
+                               @bind-Value="cliente.Apellido"
+                               placeholder="Ingrese el apellido" />
+
+                    <ValidationMessage For="@(() => cliente.Apellido)" />
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Email
+                    </label>
+
+                    <InputText class="form-control form-custom"
+                               @bind-Value="cliente.Email"
+                               placeholder="Ingrese el email" />
+
+                    <ValidationMessage For="@(() => cliente.Email)" />
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Teléfono
+                    </label>
+
+                    <InputText class="form-control form-custom"
+                               @bind-Value="cliente.Telefono"
+                               placeholder="Ingrese el teléfono" />
+
+                    <ValidationMessage For="@(() => cliente.Telefono)" />
+
+                </div>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Estado
+                </label>
+
+                <InputSelect class="form-select form-custom"
+                             @bind-Value="cliente.Estado">
+
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+
+                </InputSelect>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 mt-5">
+
+                <button class="btn btn-primary btn-guardar"
+                        type="submit">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Guardar Cliente
+                </button>
+
+                <button class="btn btn-outline-secondary btn-cancelar"
+                        type="button"
+                        @onclick="Cancelar">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Cancelar
+                </button>
+
+            </div>
+
+        </EditForm>
+
+    </div>
+
+</article>
+
+@code {
+    private CrearClienteDTO cliente = new CrearClienteDTO();
+    string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente.Estado = true;
+        await base.OnInitializedAsync();
+    }
+
+
+    // private async Task Grabar()
+    // {
+    //     var resp = await Http.Post<CrearClienteDTO, int>("api/Cliente/crear", cliente);
+
+    //     if (!resp.Error)
+    //     {
+    //         Navigation.NavigateTo("/listaclientes");
+    //     }
+    //     else
+    //     {
+    //         Mensaje = resp.ObtenerError();
+    //     }
+    // }
+private async Task Grabar()
+{
+    Mensaje = "";
+
+    var resp = await Http.Post<CrearClienteDTO, int>("api/Cliente/crear", cliente);
+
+    Console.WriteLine($"Error: {resp.Error}");
+
+    if (!resp.Error)
+    {
+        Navigation.NavigateTo("/listaclientes");
+    }
+    else
+    {
+        Mensaje = resp.ObtenerError();
+        Console.WriteLine(Mensaje);
+    }
+}
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/listaclientes");
+    }
+}

@@ -1,0 +1,78 @@
+﻿/* ===========================
+   LAYOUT ADMIN
+=========================== */
+
+body {
+    margin: 0;
+    background: #ececec;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* LAYOUT */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* MENÚ LATERAL */
+.sidebar {
+    width: 250px;
+    background: #F5C857;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #d8b54d;
+}
+
+/* LOGO */
+.logo {
+    width: 200px;
+    margin: 15px 0 25px;
+}
+
+/* MENÚ */
+.menu {
+    width: 100%;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: #000 !important;
+    font-size: 18px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+/* ICONOS */
+.menu a i {
+    font-size: 30px;
+    color: #000 !important;
+    width: 35px;
+}
+
+/* HOVER */
+.menu a:hover {
+    background: rgba(255,255,255,.30);
+}
+
+/* PÁGINA ACTIVA */
+.menu a.active {
+    background: rgba(255,255,255,.45);
+    color: #E53935 !important;
+}
+
+.menu a.active i {
+    color: #E53935 !important;
+}
+
+/* CONTENIDO */
+.contenido {
+    flex: 1;
+    background: #f5f5f5;
+    padding: 20px;
+    overflow: auto;
+}

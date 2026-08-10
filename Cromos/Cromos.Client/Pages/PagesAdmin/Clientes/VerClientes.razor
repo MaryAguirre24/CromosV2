@@ -1,0 +1,137 @@
+﻿@page "/listaclientes"
+@layout AdminLayout
+@inject IHttpServicio Http
+@rendermode InteractiveAuto
+@inject NavigationManager Navigation
+
+
+<PageTitle>Clientes - Cromos</PageTitle>
+
+
+<div class="clientes-container">
+
+    <div class="barra-clientes">
+        <h2 class="titulo-clientes">Lista de Clientes</h2>
+    </div>
+
+<br />
+    <div class="acciones-clientes">
+        <a class="btn btn-primary btn-nuevo" href="/Cliente/crear">
+            <i class="bi bi-plus-circle me-2"></i>
+            Nuevo Cliente
+        </a>
+    </div>
+    <br />
+
+        <div class="contenido-clientes">
+            <table class="table">
+                <thead class="table-clientes">
+                    <tr>
+                        <th>NombreCompleto</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th>Deuda</th>
+                        <th>F.Registro</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (clientes == null)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                Cargando clientes...
+                            </td>
+                        </tr>
+                    }
+                    else if (!clientes.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                No hay clientes registrados
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var cliente in clientes)
+                        {
+                            <tr>
+                                <td>@cliente.NombreCompleto</td>
+                                <td>@cliente.Email</td>
+                                <td>@cliente.Telefono</td>
+                                <td>
+                                    <span class="@(cliente.Estado
+                                                                                         ? "estado-activo"
+                                                                                         : "estado-inactivo")">
+                                        @(cliente.Estado
+                                            ? "Activo"
+                                            : "Inactivo")
+                                    </span>
+                                </td>
+                                <td>
+                                @if (cliente.Deuda > 0)
+                                {
+                                    <span class="deuda-positiva">
+                                        @cliente.Deuda.ToString("C")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="deuda-cero">
+                                        @cliente.Deuda.ToString("C")
+                                    </span>
+                                }
+                                </td>
+                            <td>
+                                @cliente.FechaRegistro.ToString("dd/MM/yyyy")
+                            </td> 
+
+                                <td>
+
+                                    <a class="btn-icono"
+                                       href="@($"/Cliente/{cliente.Id}")">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a class="btn-icono"
+                                       href="@($"/Cliente/editar/{cliente.Id}")">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+</div>
+
+
+@code {
+    private List<ListaClienteDTO>? clientes;
+    string Mensaje="";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CargarClientes();
+    }
+
+    private async Task CargarClientes()
+    {
+        var response = await Http.Get<List<ListaClienteDTO>>("api/Cliente/listaClientes");
+        if (!response.Error)
+        {
+            clientes = response.Respuesta;
+        }
+        else
+        {
+            Mensaje = response.ObtenerError();
+        } 
+    }
+}
+
+
+

@@ -1,0 +1,175 @@
+﻿@page "/cliente/editar/{Id:int}"
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+
+@rendermode InteractiveAuto
+
+<PageTitle>Editar Cliente - Cromos</PageTitle>
+
+<div class="cabecera-editar-cliente">
+    <div>
+        <h2 class="titulo-editar-cliente">
+            <i class="bi bi-pencil-square me-2"></i> Editar Cliente
+        </h2>
+        <p class="subtitulo-editar-cliente">
+            Modificá los datos del cliente seleccionado.
+        </p>
+    </div>
+
+    <a class="btn btn-outline-dark"
+       href="/listaclientes">
+        <i class="bi bi-arrow-left-circle me-2"></i>
+        Atrás
+    </a>
+</div>
+<div class="card-editar-cliente">
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-danger">
+            @Mensaje
+        </div>
+
+    }
+    @if (cliente == null)
+    {
+        <div class="text-center p-5">
+            <div class="spinner-border text-primary"
+                 role="status">
+
+                <span class="visually-hidden">
+                    Cargando...
+                </span>
+            </div>
+            <p class="mt-3">
+                Cargando datos del cliente...
+            </p>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="cliente"
+                  OnSubmit="Guardar"
+                  FormName="EditarCliente">
+            <DataAnnotationsValidator />
+
+            <h4 class="titulo-datos-cliente">
+                <i class="bi bi-person-vcard me-2"></i>
+                Datos del Cliente
+            </h4>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-semibold">
+                        Nombre
+                    </label>
+                    <InputText class="form-control input-editar-cliente"
+                               @bind-Value="cliente.Nombre" />
+                    <ValidationMessage For="@(() => cliente.Nombre)" />
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-semibold">
+                        Apellido
+                    </label>
+                    <InputText class="form-control input-editar-cliente"
+                               @bind-Value="cliente.Apellido" />
+                    <ValidationMessage For="@(() => cliente.Apellido)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-semibold">
+                        Email
+                    </label>
+                    <InputText class="form-control input-editar-cliente"
+                               @bind-Value="cliente.Email" />
+                    <ValidationMessage For="@(() => cliente.Email)" />
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-semibold">
+                        Teléfono
+                    </label>
+                    <InputText class="form-control input-editar-cliente"
+                               @bind-Value="cliente.Telefono" />
+                    <ValidationMessage For="@(() => cliente.Telefono)" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">
+                    Estado
+                </label>
+                <InputSelect class="form-select input-editar-cliente"
+                             @bind-Value="cliente.Estado">
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </InputSelect>
+            </div>
+            <div class="botones-editar-cliente">
+                <button type="submit"
+                        class="btn btn-primary btn-guardar-editar-cliente">
+                    <i class="bi bi-save me-2"></i> Guardar
+                </button>
+                <a class="btn btn-outline-dark btn-cancelar-editar-cliente"
+                   href="/listaclientes">
+                    <i class="bi bi-x-circle me-2"></i> Cancelar
+                </a>
+            </div>
+
+        </EditForm>
+    }
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private EditarClienteDTO? cliente;
+    private string Mensaje ="";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await CargarCliente();
+    }
+    
+    private async Task CargarCliente()
+    {
+
+            var resp = await Http.Get<EditarClienteDTO>($"api/Cliente/editar/{Id}");
+            if (!resp.Error)
+            {
+                cliente = resp.Respuesta;
+            }
+            else
+            {
+                Mensaje = resp.ObtenerError();
+            }
+       
+    }
+
+    private async Task Guardar()
+    {
+        try
+        {
+            var resp = await Http.Put<EditarClienteDTO,int>($"api/Cliente/editar/{Id}", cliente);
+            if (!resp.Error)
+            {
+                Navigation.NavigateTo("/listaclientes");
+            }
+            else
+            {
+                Mensaje = resp.ObtenerError();
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al guardar el cliente: {ex.Message}";
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/listaclientes");
+    }
+}

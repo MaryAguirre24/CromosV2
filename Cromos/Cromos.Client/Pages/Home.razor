@@ -1,0 +1,176 @@
+﻿@page "/"
+
+<PageTitle>HOME</PageTitle>
+
+<div class="home-container">
+
+    <div class="pagina-home">
+
+        <!-- HEADER -->
+        <header class="header-cromos">
+
+            <div class="logo-container">
+                <img src="/images/Logo.png" alt="Cromos" class="logo" />
+            </div>
+
+            <div class="buscador">
+                <input type="text" placeholder="lapiceras, mochila, cartulina..." />
+                <i class="bi bi-search"></i>
+            </div>
+
+            <div class="iconos-header">
+
+                <NavLink href="/" class="icono-header">
+                    <i class="bi bi-house-door-fill"></i>
+                </NavLink>
+
+                <NavLink href="/Account/Login" class="icono-header">
+                    <i class="bi bi-person-square"></i>
+                </NavLink>
+
+                <NavLink href="/mispedidos" class="icono-header">
+                    <i class="bi bi-journal-text"></i>
+                </NavLink>
+
+                <NavLink href="/carrito" class="icono-header">
+                    <i class="bi bi-cart-fill"></i>
+                </NavLink>
+
+            </div>
+
+        </header>
+
+        <!-- CATEGORIAS -->
+
+        <nav class="menu-categorias">
+
+            <a href="#" class="activo">TODOS LOS PRODUCTOS</a>
+            <a href="#">LIBRERIA</a>
+            <a href="#">ARTISTICA</a>
+            <a href="#">OFICINA</a>
+            <a href="#">ESCOLAR</a>
+            <a href="#">JUGUETERIA</a>
+            <a href="#">TECNOLOGIA</a>
+            <a href="#">OTROS</a>
+
+        </nav>
+        <div class="barra-superior-contenido">
+            <div class="notificaciones">
+                <i class="bi bi-bell-fill"></i>
+                <span>2</span>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+
+        <section class="contenido">
+
+            <h2>HOME - PRODUCTOS</h2>
+
+            <div class="acciones">
+
+                <button class="btn-rojo">
+                    <i class="bi bi-arrow-down-up"></i>
+                    ORDENAR
+                </button>
+
+                <button class="btn-rojo">
+                    <i class="bi bi-funnel-fill"></i>
+                    FILTRAR
+                </button>
+
+            </div>
+
+            <div class="productos-grid">
+
+                <div class="producto-card">
+
+                    <img src="/images/resma.png" />
+
+                    <p>RESMA HOJA A4 - BOREAL</p>
+
+                    <h4>$7,000</h4>
+
+                </div>
+
+                <div class="producto-card">
+
+                    <img src="/images/tempera.png" />
+
+                    <p>TEMPERAS MAPED COLORPEPS PASTEL 15ML X 4</p>
+
+                    <h4>$1,000</h4>
+
+                </div>
+
+                <div class="producto-card">
+
+                    <img src="/images/carpeta.png" />
+
+                    <p>CARPETA A4 BASE OPACA</p>
+
+                    <h4>$800</h4>
+
+                </div>
+
+                <div class="producto-card">
+
+                    <img src="/images/juego.png" />
+
+                    <p>JUEGO THINK WORDS - SIMIL BASTA</p>
+
+                    <h4>$24,999</h4>
+
+                </div>
+
+                <div class="producto-card">
+
+                    <img src="/images/teclado.png" />
+
+                    <p>COMBO GAMER GLOBAL KL 160 RGB</p>
+
+                    <h4>$20,000</h4>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer-cromos">
+
+            <div class="info-contacto">
+
+                <p>
+                    <i class="bi bi-facebook"></i>
+                    facebook.com/cromoslibreria
+                </p>
+
+                <p>
+                    <i class="bi bi-whatsapp"></i>
+                    (351) 374-4248
+                </p>
+
+                <p>
+                    <i class="bi bi-envelope-fill"></i>
+                    cromoslibreria@hotmail.com
+                </p>
+
+                <p>
+                    <i class="bi bi-geo-alt-fill"></i>
+                    Javier Lascano Colodrero 2692, Córdoba, Argentina
+                </p>
+
+            </div>
+
+            <div class="mapa">
+
+                <img src="/images/mapa.png" />
+
+            </div>
+
+        </footer>
+
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="BD/BD.csproj" />
+  <Project Path="Cromos/Cromos.Client/Cromos.Client.csproj" />
+  <Project Path="Cromos/Cromos/Cromos.csproj" />
+  <Project Path="Repositorio/Repositorio.csproj" />
+  <Project Path="Servicio/Servicio.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>

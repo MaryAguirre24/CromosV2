@@ -1,0 +1,132 @@
+﻿/* CONTENEDOR */
+.clientes-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* BARRA SUPERIOR */
+.barra-clientes {
+    width: 100%;
+    background: #1E88E5;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.titulo-clientes {
+    margin: 0;
+    padding: 18px 25px;
+    color: #000;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.contenido-clientes {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.acciones-clientes {
+    display: flex;
+    justify-content: flex-end; /* Lo envía a la derecha */
+    margin-bottom: 20px; /* Separación con la tabla */
+}
+
+.btn-nuevo {
+    background: #1E88E5;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+    .btn-nuevo:hover {
+        background: #1565C0;
+    }
+
+/* TABLA */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-clientes {
+    background: #3f3f3f;/* Gris oscuro */
+    color: #1E88E5;
+}
+
+    .table-clientes th {
+        color: #000; /* Letras blancas */
+        font-size: 15px; /* Más pequeñas */
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        padding: 12px;
+    }
+
+.table tbody tr {
+    background: #69ACE8;
+    transition: .2s;
+}
+
+    .table tbody tr:hover {
+        background: #5C9FDD;
+    }
+
+.table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 14px;
+    color: #000;
+}
+
+/* ESTADO */
+.estado-activo {
+    background: #19d419;
+    color: #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.estado-inactivo {
+    background: #dc3545;
+    color: #fff;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* DEUDA */
+.deuda-verde {
+    background: #19d419;
+    color: #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.deuda-roja {
+    background: #ff3131;
+    color: #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* BOTONES */
+.btn-icono {
+    color: #555;
+    font-size: 22px;
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+    .btn-icono:hover {
+        color: #1E88E5;
+    }

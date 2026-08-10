@@ -67,7 +67,7 @@ namespace Cromos.Controllers
                 {
                     PersonaId = persona.Id,
                     Estado = dto.Estado,
-                    FechaRegistro = DateTime.Now
+                    FechaRegistro = DateTime.UtcNow
                 };
                 var idCliente = await repositorio.Insert(cliente);
                 return Ok(idCliente );
