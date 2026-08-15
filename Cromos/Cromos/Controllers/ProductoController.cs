@@ -20,7 +20,7 @@ namespace Cromos.Controllers
             this.productoRepositorio = productoRepositorio;
         }
 
-        [HttpGet]
+        [HttpGet("lista")]
         public async Task<ActionResult<List<ListaProductoDTO>>> ListaProductos()
         {
             var lista = await productoRepositorio.ObtenerListaProductos();
