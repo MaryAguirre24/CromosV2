@@ -146,38 +146,24 @@
         await base.OnInitializedAsync();
     }
 
-
-    // private async Task Grabar()
-    // {
-    //     var resp = await Http.Post<CrearClienteDTO, int>("api/Cliente/crear", cliente);
-
-    //     if (!resp.Error)
-    //     {
-    //         Navigation.NavigateTo("/listaclientes");
-    //     }
-    //     else
-    //     {
-    //         Mensaje = resp.ObtenerError();
-    //     }
-    // }
-private async Task Grabar()
-{
-    Mensaje = "";
-
-    var resp = await Http.Post<CrearClienteDTO, int>("api/Cliente/crear", cliente);
-
-    Console.WriteLine($"Error: {resp.Error}");
-
-    if (!resp.Error)
+    private async Task Grabar()
     {
-        Navigation.NavigateTo("/listaclientes");
+        Mensaje = "";
+
+        var resp = await Http.Post<CrearClienteDTO, int>("api/Cliente/crear", cliente);
+
+        Console.WriteLine($"Error: {resp.Error}");
+
+        if (!resp.Error)
+        {
+            Navigation.NavigateTo("/listaclientes");
+        }
+        else
+        {
+            Mensaje = resp.ObtenerError();
+            Console.WriteLine(Mensaje);
+        }
     }
-    else
-    {
-        Mensaje = resp.ObtenerError();
-        Console.WriteLine(Mensaje);
-    }
-}
 
     private void Cancelar()
     {

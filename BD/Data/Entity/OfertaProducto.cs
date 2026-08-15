@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Xml.Linq;
 
 namespace BD.Data.Entity
 {
+    [Index(nameof(OfertaId), nameof(ProductoId), Name = "OfertaProducto_OfertaId_ProductoId_UQ", IsUnique = true)]
     public class OfertaProducto : EntityBase
     {
         [Required(ErrorMessage = "El ID de la oferta a la que pertenece es obligatorio")]

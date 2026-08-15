@@ -1,0 +1,104 @@
+﻿@page "/admin/productos/lista-productos"
+@using Shared.DTOs.Productos
+@layout AdminLayout
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+@rendermode InteractiveAuto
+
+<PageTitle>Productos - Cromos</PageTitle>
+
+<div class="productos-container">
+    <div class="barra-productos">
+        <h2 class="titulo-productos">Lista de Productos</h2>
+    </div>
+    <br />
+    <div class="acciones-productos d-flex gap-2 mb-3">
+        <button type="button" class="btn btn-success btn-nuevo d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCrearProducto">
+            <i class="bi bi-plus-square"></i>
+            <span>Nuevo Producto</span>
+        </button>
+
+        <button type="button" class="btn btn-warning btn-buscar d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalBuscarProducto">
+            <i class="bi bi-search"></i>
+            <span>Búsqueda Avanzada</span>
+        </button>
+    </div>
+    <br />
+    <div class="contenido-productos">
+        <table class="table">
+            <thead class="table-productos">
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoria</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (productos == null)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2 text-muted mb-0">Cargando productos...</p>
+                        </td>
+                    </tr>
+                }
+                else if (!productos.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                            No hay productos registrados.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var producto in productos)
+                    {
+                        <tr>
+                            <td class="fw-bold">@producto.Codigo</td>
+                            <td>@producto.Nombre</td>
+                            <!-- Formato de moneda: ToString("C") o manual si usas $ sin centavos -->
+                            <td>@producto.PrecioVenta.ToString("C0")</td>
+                            <td>@producto.Stock</td>
+                            <td>@producto.CategoriaNombre</td>
+                            <td>
+                                <!-- Botón Editar (Modal o Redirección) -->
+                                <button class="btn btn-warning btn-sm me-1 text-dark"
+                                        title="Editar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarProducto"
+                                        onclick="cargarDatosEditar(@producto.Id)">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+
+                                <!-- Botón Eliminar / Desactivar -->
+                                <button class="btn btn-danger btn-sm"
+                                        title="Eliminar"
+                                        onclick="eliminarProducto(@producto.Id, '@producto.Nombre')">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<ListaProductoDTO>? productos;
+    string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProductos();
+    }
+}

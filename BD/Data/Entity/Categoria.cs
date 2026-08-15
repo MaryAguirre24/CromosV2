@@ -15,10 +15,11 @@ namespace BD.Data.Entity
         [MaxLength(60, ErrorMessage = "El nombre no puede exceder los {1} caracteres")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "La descripción de la categoría es obligatoria")]
-        public string? Descripcion { get; set; }
+        public string Descripcion { get; set; }
         [Required(ErrorMessage = "El estado de la categoría es obligatorio")]
         public bool Estado { get; set; } = true;
-        public List<Categoria> SubCategorias { get; set; }
+        public List<Categoria> SubCategorias { get; set; } = new();
+        public List<Producto> Productos { get; set; } = new();
 
     }
 }
