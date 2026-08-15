@@ -101,4 +101,24 @@
     {
         await CargarProductos();
     }
+
+    private async Task CargarProductos()
+    {
+        try
+        {
+            var response = await Http.Get<List<ListaProductoDTO>>("api/productos/lista");
+            if (response != null)
+            {
+                productos = response.Respuesta;
+            }
+            else
+            {
+                Mensaje = "No se pudieron cargar los productos.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar los productos: {ex.Message}";
+        }
+    }
 }
