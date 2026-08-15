@@ -106,7 +106,7 @@
     {
         try
         {
-            var response = await Http.Get<List<ListaProductoDTO>>("api/productos/lista");
+            var response = await Http.Get<List<ListaProductoDTO>>("api/admin/productos/lista-productos");
             if (response != null)
             {
                 productos = response.Respuesta;
