@@ -1,0 +1,13 @@
+/* CSS for ListaProductos component */
+.productos-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.barra-productos {
+    width: 100%;
+    background: #1E88E5;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
