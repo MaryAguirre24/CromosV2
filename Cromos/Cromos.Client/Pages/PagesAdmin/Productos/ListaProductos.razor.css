@@ -1,13 +1,165 @@
 /* CSS for ListaProductos component */
+/* CONTENEDOR PRINCIPAL */
 .productos-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 0;
 }
+
+/* BARRA SUPERIOR */
 .barra-productos {
     width: 100%;
     background: #1E88E5;
     border-radius: 8px;
     margin-bottom: 25px;
+}
+
+.titulo-productos {
+    margin: 0;
+    padding: 18px 25px;
+    color: #000;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* CARD DE CONTENIDO */
+.contenido-productos {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* CONTENEDOR DE ACCIONES (NUEVO + BUSCAR) */
+.acciones-productos {
+    display: flex;
+    justify-content: flex-end; /* Alinea a la derecha */
+    gap: 10px; /* Separación entre botones */
+    margin-bottom: 20px; /* Separación con la tabla */
+}
+
+/* BOTÓN NUEVO PRODUCTO (Verde) */
+.btn-nuevo {
+    background: #00b050;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+    .btn-nuevo:hover {
+        background: #008f41;
+        color: #fff;
+    }
+
+/* BOTÓN BÚSQUEDA AVANZADA (Amarillo) */
+.btn-buscar {
+    background: #ffc000;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+    .btn-buscar:hover {
+        background: #e6ac00;
+        color: #000;
+    }
+
+/* TABLA DE PRODUCTOS */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-productos {
+    background: #3f3f3f; /* Gris oscuro para el encabezado */
+    color: #1E88E5;
+}
+
+    .table-productos th {
+        color: #000; /* Texto del encabezado */
+        font-size: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        padding: 12px;
+    }
+
+.table tbody tr {
+    background: #69ACE8;
+    transition: background 0.2s;
+}
+
+    .table tbody tr:hover {
+        background: #5C9FDD;
+    }
+
+.table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 14px;
+    color: #000;
+}
+
+/* ETIQUETAS DE STOCK */
+.stock-ok {
+    background: #19d419; /* Verde para stock suficiente */
+    color: #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.stock-bajo {
+    background: #ffc000; /* Amarillo/Naranja para poco stock */
+    color: #000;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.stock-sin {
+    background: #ff3131; /* Rojo para sin stock */
+    color: #fff;
+    padding: 5px 15px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* BOTONES DE ACCIÓN EN CADA FILA (EDITAR / ELIMINAR) */
+.btn-icono {
+    color: #333;
+    font-size: 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-icono-editar:hover {
+    color: #ffc000; /* Amarillo para editar */
+}
+
+.btn-icono-eliminar:hover {
+    color: #dc3545; /* Rojo para eliminar */
 }

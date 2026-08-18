@@ -1,5 +1,7 @@
 ﻿@page "/admin/productos/lista-productos"
+@using Shared.DTOs.Categorias
 @using Shared.DTOs.Productos
+@using Shared.DTOs.Proveedores
 @layout AdminLayout
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
@@ -12,18 +14,19 @@
         <h2 class="titulo-productos">Lista de Productos</h2>
     </div>
     <br />
-    <div class="acciones-productos d-flex gap-2 mb-3">
-        <button type="button" class="btn btn-success btn-nuevo d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCrearProducto">
+    <div class="acciones-productos">
+        <button type="button" class="btn-nuevo" @onclick="() => verModalCrear = true">
             <i class="bi bi-plus-square"></i>
             <span>Nuevo Producto</span>
         </button>
+        <ModalCrearProducto @bind-Mostrar="verModalCrear" OnProductoGuardado="CargarLista" />
 
-        <button type="button" class="btn btn-warning btn-buscar d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalBuscarProducto">
+        <button type="button" class="btn-buscar" @onclick="AbrirModalBuscar">
             <i class="bi bi-search"></i>
             <span>Búsqueda Avanzada</span>
         </button>
     </div>
-    <br />
+     <br />
     <div class="contenido-productos">
         <table class="table">
             <thead class="table-productos">
@@ -64,12 +67,10 @@
                         <tr>
                             <td class="fw-bold">@producto.Codigo</td>
                             <td>@producto.Nombre</td>
-                            <!-- Formato de moneda: ToString("C") o manual si usas $ sin centavos -->
                             <td>@producto.PrecioVenta.ToString("C0")</td>
                             <td>@producto.Stock</td>
                             <td>@producto.CategoriaNombre</td>
                             <td>
-                                <!-- Botón Editar (Modal o Redirección) -->
                                 <button class="btn btn-warning btn-sm me-1 text-dark"
                                         title="Editar"
                                         data-bs-toggle="modal"
@@ -78,7 +79,6 @@
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
 
-                                <!-- Botón Eliminar / Desactivar -->
                                 <button class="btn btn-danger btn-sm"
                                         title="Eliminar"
                                         onclick="eliminarProducto(@producto.Id, '@producto.Nombre')">
@@ -95,14 +95,16 @@
 
 @code {
     private List<ListaProductoDTO>? productos;
+    private bool verModalCrear = false;
     string Mensaje = "";
+
 
     protected override async Task OnInitializedAsync()
     {
-        await CargarProductos();
+        await CargarLista();
     }
 
-    private async Task CargarProductos()
+    private async Task CargarLista()
     {
         try
         {
@@ -120,5 +122,10 @@
         {
             Mensaje = $"Error al cargar los productos: {ex.Message}";
         }
+    }
+
+    private void AbrirModalBuscar()
+    {
+        Navigation.NavigateTo("/admin/productos/buscar-producto");
     }
 }

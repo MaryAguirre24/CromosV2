@@ -1,0 +1,173 @@
+/* CSS for ModalCrearProducto component */
+/* Contenedor principal (Overlay / Fondo oscuro) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Caja de contenido del modal */
+.modal-contenido {
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Encabezado */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #1e293b;
+    }
+
+.btn-cerrar {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+    .btn-cerrar:hover {
+        color: #0f172a;
+    }
+
+/* Cuerpo del modal (Formulario) */
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+    .form-grupo label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    /* Estilos de los inputs de Blazor (InputText, InputNumber, InputSelect) */
+    .form-grupo input,
+    .form-grupo select {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .form-grupo input:focus,
+        .form-grupo select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+/* Estilos para clases de validación automáticas de Blazor */
+.invalid {
+    border-color: #ef4444 !important;
+}
+
+.validation-message {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+/* Pie del modal */
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: #f8fafc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Botones */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-cancelar {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+    .btn-cancelar:hover {
+        background-color: #cbd5e1;
+    }
+
+.btn-guardar {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+    .btn-guardar:hover {
+        background-color: #1d4ed8;
+    }
+
+/* Animaciones suaves de apertura */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

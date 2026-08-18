@@ -1,0 +1,166 @@
+﻿@page "/admin/productos/lista-productos/modal-crear-producto"
+@using Shared.DTOs.Categorias
+@using Shared.DTOs.Productos
+@using Shared.DTOs.Proveedores
+@inject IHttpServicio Http
+@inject NavigationManager Navigation
+@rendermode InteractiveAuto
+
+<PageTitle>Crear Producto - Cromos</PageTitle>
+
+@if (Mostrar)
+{
+    <div class="modal" style="display: flex;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h2>Registrar Nuevo Producto</h2>
+                <button type="button" class="btn-cerrar" @onclick="CerrarModal">&times;</button>
+            </div>
+            @if (!string.IsNullOrEmpty(Mensaje))
+            {
+                <div class="alert alert-info mt-2">@Mensaje</div>
+            }
+            <EditForm Model="nuevoProducto" OnValidSubmit="GuardarProducto">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="modal-body">
+                    <div class="form-grupo">
+                        <label>Código</label>
+                        <InputText @bind-Value="nuevoProducto.Codigo" class="form-control" />
+                        <ValidationMessage For="@(() => nuevoProducto.Codigo)" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Nombre</label>
+                        <InputText @bind-Value="nuevoProducto.Nombre" class="form-control" />
+                        <ValidationMessage For="@(() => nuevoProducto.Nombre)" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Precio</label>
+                        <InputNumber @bind-Value="nuevoProducto.PrecioVenta" class="form-control" />
+                        <ValidationMessage For="@(() => nuevoProducto.PrecioVenta)" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Stock</label>
+                        <InputNumber @bind-Value="nuevoProducto.Stock" class="form-control" />
+                        <ValidationMessage For="@(() => nuevoProducto.Stock)" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Categoría</label>
+                        <InputSelect @bind-Value="nuevoProducto.CategoriaId" class="form-control">
+                            <option value="0" disabled>Seleccionar...</option>
+                            @foreach (var c in categorias)
+                            {
+                                <option value="@c.Id">@c.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => nuevoProducto.CategoriaId)" />
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Proveedor</label>
+                        <InputSelect @bind-Value="nuevoProducto.ProveedorId" class="form-control">
+                            <option value="0" disabled>Seleccionar...</option>
+                            @foreach (var prov in proveedores)
+                            {
+                                <option value="@prov.Id">@prov.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => nuevoProducto.ProveedorId)" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar" @onclick="CerrarModal">Cancelar</button>
+                    <button type="submit" class="btn btn-guardar">Guardar Producto</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public bool Mostrar { get; set; } = false;
+    [Parameter] public EventCallback<bool> MostrarChanged { get; set; }
+    [Parameter] public EventCallback OnProductoGuardado { get; set; }
+
+
+
+    private List<ListaCategoriaDTO> categorias = new();
+    private List<ProveedorDTO> proveedores = new();
+    private CrearProductoDTO nuevoProducto = new();
+    string Mensaje = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Mostrar)
+        {
+            nuevoProducto = new CrearProductoDTO();
+            Mensaje = "";
+            await CargarCatalogos();
+        }
+    }
+
+    private async Task CargarCatalogos()
+    {
+        try
+        {
+            var response = await Http.Get<List<ListaCategoriaDTO>>("api/admin/categorias/listacategorias");
+            if (response!= null)
+            {
+                categorias = response.Respuesta;
+            }
+            else
+            {
+                Mensaje = "No se pudieron cargar las categorías.";
+            }
+            var resp = await Http.Get<List<ProveedorDTO>>("api/admin/proveedores/lista-proveedores");
+            if (resp != null)
+            {
+                proveedores = resp.Respuesta;
+            }
+            else
+            {
+                Mensaje = "No se pudieron cargar los proveedores.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar catálogos: {ex.Message}";
+        }
+    }
+
+    private void CerrarModal()
+    {
+        Mostrar = false;
+        MostrarChanged.InvokeAsync(Mostrar);
+    }
+    private async Task GuardarProducto()
+    {
+        try
+        {
+            var response = await Http.Post<CrearProductoDTO, string>("api/admin/productos/crear-producto", nuevoProducto);
+            if (response != null)
+            {
+                Mensaje = "Producto creado exitosamente.";
+                Mostrar = false;
+                await OnProductoGuardado.InvokeAsync();
+            }
+            else
+            {
+                Mensaje = "No se pudo crear el producto.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al crear el producto: {ex.Message}";
+        }
+    }
+
+}
