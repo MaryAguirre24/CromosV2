@@ -1,6 +1,7 @@
 ﻿using BD.Data;
 using BD.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using Shared.DTOs.Categorias;
 using Shared.DTOs.Productos;
 using System;
 using System.Collections.Generic;
@@ -128,6 +129,46 @@ namespace Repositorio.Repositorios
             var listaProductosDTO = await context.Productos
                 .Include(p => p.Categoria)
                 .Where(p => p.ProveedorId == proveedorId)
+                .Select(p => new ListaProductoDTO
+                {
+                    Codigo = p.Codigo,
+                    Nombre = p.Nombre,
+                    Descripcion = p.Descripcion,
+                    PrecioVenta = p.PrecioVenta,
+                    Stock = p.Stock,
+                    CategoriaNombre = p.Categoria.Nombre
+                })
+                .ToListAsync();
+            return listaProductosDTO;
+        }
+        public async Task<List<ListaProductoDTO>>BusquedaAvanzada(BusquedaAvanzadaDTO busqueda)
+        {
+            var query = context.Productos.Include(p => p.Categoria).AsQueryable();
+            if (!string.IsNullOrEmpty(busqueda.Nombre))
+            {
+                query = query.Where(p => p.Nombre.Contains(busqueda.Nombre));
+            }
+            if (busqueda.CategoriaId.HasValue)
+            {
+                query = query.Where(p => p.CategoriaId == busqueda.CategoriaId.Value);
+            }
+            if (busqueda.StockMin.HasValue)
+            {
+                query = query.Where(p => p.Stock >= busqueda.StockMin.Value);
+            }
+            if (busqueda.StockMax.HasValue)
+            {
+                query = query.Where(p => p.Stock <= busqueda.StockMax.Value);
+            }
+            if (busqueda.PrecioMin.HasValue)
+            {
+                query = query.Where(p => p.PrecioVenta >= busqueda.PrecioMin.Value);
+            }
+            if (busqueda.PrecioMax.HasValue)
+            {
+                query = query.Where(p => p.PrecioVenta <= busqueda.PrecioMax.Value);
+            }
+            var listaProductosDTO = await query
                 .Select(p => new ListaProductoDTO
                 {
                     Codigo = p.Codigo,

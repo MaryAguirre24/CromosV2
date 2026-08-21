@@ -28,10 +28,6 @@ namespace Cromos.Controllers
             {
                 return BadRequest("Error al obtener las categorias");
             }
-            if(lista.Count == 0)
-            {
-                return NotFound("No se encontraron categorias");
-            }
             return Ok(lista);
         }
         [HttpGet("{id}")]

@@ -3,6 +3,7 @@ using BD.Data.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Repositorios;
+using Shared.DTOs.Categorias;
 using Shared.DTOs.Productos;
 
 namespace Cromos.Controllers
@@ -87,6 +88,12 @@ namespace Cromos.Controllers
                     detalle = ex.InnerException?.Message ?? ex.Message
                 });
             }
+        }
+        [HttpPost("busquedaavanzada")]
+        public async Task<ActionResult> BusquedaAvanzada([FromBody] BusquedaAvanzadaDTO busqueda)
+        {
+            var productos = await productoRepositorio.BusquedaAvanzada(busqueda);
+            return Ok(productos);
         }
 
         [HttpPut("editar/{id}")]

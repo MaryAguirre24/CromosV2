@@ -1,11 +1,9 @@
-﻿@page "/admin/productos/lista-productos"
+﻿@page "/Producto/lista"
 @using Shared.DTOs.Categorias
 @using Shared.DTOs.Productos
-@using Shared.DTOs.Proveedores
 @layout AdminLayout
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
-@rendermode InteractiveAuto
 
 <PageTitle>Productos - Cromos</PageTitle>
 
@@ -15,7 +13,7 @@
     </div>
     <br />
     <div class="acciones-productos">
-        <button type="button" class="btn-nuevo" @onclick="() => verModalCrear = true">
+        <button type="button" class="btn-nuevo" @onclick="AbrirModalCrear">
             <i class="bi bi-plus-square"></i>
             <span>Nuevo Producto</span>
         </button>
@@ -25,6 +23,7 @@
             <i class="bi bi-search"></i>
             <span>Búsqueda Avanzada</span>
         </button>
+        <ModalBusquedaAvanzada @bind-Mostrar="verModalBuscar" OnSearch="AplicarBusquedaAvanzada" />
     </div>
      <br />
     <div class="contenido-productos">
@@ -33,6 +32,7 @@
                 <tr>
                     <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Descripcion</th>
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Categoria</th>
@@ -43,7 +43,7 @@
                 @if (productos == null)
                 {
                     <tr>
-                        <td colspan="6" class="text-center py-4">
+                        <td colspan="7" class="text-center py-4">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Cargando...</span>
                             </div>
@@ -54,7 +54,7 @@
                 else if (!productos.Any())
                 {
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
+                        <td colspan="7" class="text-center py-4 text-muted">
                             <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                             No hay productos registrados.
                         </td>
@@ -67,21 +67,20 @@
                         <tr>
                             <td class="fw-bold">@producto.Codigo</td>
                             <td>@producto.Nombre</td>
+                            <td>@producto.Descripcion</td>
                             <td>@producto.PrecioVenta.ToString("C0")</td>
                             <td>@producto.Stock</td>
                             <td>@producto.CategoriaNombre</td>
                             <td>
                                 <button class="btn btn-warning btn-sm me-1 text-dark"
                                         title="Editar"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalEditarProducto"
-                                        onclick="cargarDatosEditar(@producto.Id)">
+                                        @onclick="() => CargarDatosEditar(producto.Id)">
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
 
                                 <button class="btn btn-danger btn-sm"
                                         title="Eliminar"
-                                        onclick="eliminarProducto(@producto.Id, '@producto.Nombre')">
+                                        @onclick="() => DesactivarProducto(producto.Id, producto.Nombre)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </td>
@@ -96,6 +95,7 @@
 @code {
     private List<ListaProductoDTO>? productos;
     private bool verModalCrear = false;
+    private bool verModalBuscar = false;
     string Mensaje = "";
 
 
@@ -108,7 +108,7 @@
     {
         try
         {
-            var response = await Http.Get<List<ListaProductoDTO>>("api/admin/productos/lista-productos");
+            var response = await Http.Get<List<ListaProductoDTO>>("api/Producto/lista");
             if (response != null)
             {
                 productos = response.Respuesta;
@@ -123,9 +123,57 @@
             Mensaje = $"Error al cargar los productos: {ex.Message}";
         }
     }
-
+    private async Task AplicarBusquedaAvanzada(BusquedaAvanzadaDTO filtros)
+    {
+        try
+        {
+            var response = await Http.Post<BusquedaAvanzadaDTO, List<ListaProductoDTO>>("api/Producto/lista/busquedaavanzada", filtros);
+            if (response != null)
+            {
+                productos = response.Respuesta;
+            }
+            else
+            {
+                Mensaje = "No se pudieron aplicar los filtros de búsqueda.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al aplicar la búsqueda avanzada: {ex.Message}";
+        }
+    }
+    private void AbrirModalCrear()
+    {
+        verModalCrear = true;
+        StateHasChanged();
+    }
     private void AbrirModalBuscar()
     {
-        Navigation.NavigateTo("/admin/productos/buscar-producto");
+        verModalBuscar = true;
+        StateHasChanged();
     }
+    private async Task CargarDatosEditar(int productoId)
+    {
+        try
+        {
+            var response = await Http.Get<ActualizarProductoDTO>($"api/Producto/obtener-producto/{productoId}");
+            if (response?.Respuesta != null)
+            {
+                var productoParaEditar = response.Respuesta;
+                Navigation.NavigateTo($"/productos/editar-producto/{productoId}");
+            }
+            else
+            {
+                Mensaje = "No se pudo cargar la información del producto para editar.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Mensaje = $"Error al cargar el producto: {ex.Message}";
+        }
+    }
+    private async Task DesactivarProducto(int productoId, string nombreProducto)
+    {
+    }
+
 }

@@ -1,12 +1,8 @@
-﻿@page "/admin/productos/lista-productos/modal-crear-producto"
-@using Shared.DTOs.Categorias
+﻿@using Shared.DTOs.Categorias
 @using Shared.DTOs.Productos
 @using Shared.DTOs.Proveedores
 @inject IHttpServicio Http
 @inject NavigationManager Navigation
-@rendermode InteractiveAuto
-
-<PageTitle>Crear Producto - Cromos</PageTitle>
 
 @if (Mostrar)
 {
@@ -35,6 +31,10 @@
                         <label>Nombre</label>
                         <InputText @bind-Value="nuevoProducto.Nombre" class="form-control" />
                         <ValidationMessage For="@(() => nuevoProducto.Nombre)" />
+                    </div>
+                    <div class="form-grupo">
+                        <label>Descripción</label>
+                        <InputText @bind-Value="nuevoProducto.Descripcion" class="form-control" />
                     </div>
 
                     <div class="form-grupo">
@@ -97,7 +97,7 @@
     string Mensaje = "";
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         if (Mostrar)
         {
@@ -111,8 +111,8 @@
     {
         try
         {
-            var response = await Http.Get<List<ListaCategoriaDTO>>("api/admin/categorias/listacategorias");
-            if (response!= null)
+            var response = await Http.Get<List<ListaCategoriaDTO>>("api/Categoria/listacategorias");
+            if (response?.Respuesta != null)
             {
                 categorias = response.Respuesta;
             }
@@ -120,8 +120,8 @@
             {
                 Mensaje = "No se pudieron cargar las categorías.";
             }
-            var resp = await Http.Get<List<ProveedorDTO>>("api/admin/proveedores/lista-proveedores");
-            if (resp != null)
+            var resp = await Http.Get<List<ProveedorDTO>>("api/proveedor/lista-proveedores");
+            if (resp?.Respuesta != null)
             {
                 proveedores = resp.Respuesta;
             }
@@ -136,21 +136,24 @@
         }
     }
 
-    private void CerrarModal()
+    private async Task CerrarModal()
     {
+        nuevoProducto = new();
+        Mensaje = "";
         Mostrar = false;
-        MostrarChanged.InvokeAsync(Mostrar);
+        await MostrarChanged.InvokeAsync(Mostrar);
     }
     private async Task GuardarProducto()
     {
         try
         {
-            var response = await Http.Post<CrearProductoDTO, string>("api/admin/productos/crear-producto", nuevoProducto);
-            if (response != null)
+            Mensaje = "";
+            var response = await Http.Post<CrearProductoDTO, bool>("api/Producto/crear", nuevoProducto);
+            if (response?.Respuesta != null)
             {
                 Mensaje = "Producto creado exitosamente.";
-                Mostrar = false;
                 await OnProductoGuardado.InvokeAsync();
+                await CerrarModal();
             }
             else
             {
@@ -159,7 +162,7 @@
         }
         catch (Exception ex)
         {
-            Mensaje = $"Error al crear el producto: {ex.Message}";
+            Mensaje = $"Error al guardar el producto: {ex.Message}";
         }
     }
 

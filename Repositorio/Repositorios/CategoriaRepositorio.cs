@@ -92,6 +92,7 @@ namespace Repositorio.Repositorios
             await context.SaveChangesAsync();
             return true;
         }
+        
         public async Task<bool> DesactivarCategoria(int id)
         {
             var categoria = await context.Categorias.FindAsync(id);
